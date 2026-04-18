@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Love Korean</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .home { flex: 1; overflow-y: auto; padding: 16px; }
+  .home-header { text-align: center; padding: 20px 0 16px; }
+  .home-header h1 { font-size: 22px; font-weight: 800; color: #fff; }
+  .home-header p { font-size: 13px; color: #64748b; margin-top: 4px; }
+  .level-card { background: #1e293b; border-radius: 14px; margin-bottom: 14px; overflow: hidden; border: 1px solid #334155; }
+  .level-title { padding: 12px 16px; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+  .book-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #334155; }
+  .book-btn { background: #1e293b; border: none; padding: 14px; cursor: pointer; text-align: left; transition: background 0.15s; display: flex; align-items: center; gap: 10px; width: 100%; }
+  .book-btn:hover, .book-btn:active { background: #2d3f55; }
+  .book-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .sb-icon { background: #1d4ed8; }
+  .wb-icon { background: #7c3aed; }
+  .book-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+  .sb-type { color: #60a5fa; }
+  .wb-type { color: #a78bfa; }
+  .book-name { font-size: 12px; color: #94a3b8; }
+
+  .viewer { display: none; flex-direction: column; height: 100vh; }
+  .viewer.active { display: flex; }
+  .viewer-topbar { background: #1e293b; padding: 10px 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #334155; flex-shrink: 0; }
+  .back-btn { background: #334155; border: none; color: #fff; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+  .viewer-title { font-size: 13px; font-weight: 700; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-btn { background: #334155; border: none; color: #fff; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+  .nav-btn:hover { background: #475569; }
+  .page-num { font-size: 12px; color: #94a3b8; min-width: 50px; text-align: center; }
+  .save-btn { background: #10b981; border: none; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
+  .toggle-btn { background: #334155; border: none; color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+
+  .viewer-toolbar { background: #1e293b; padding: 8px 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #334155; flex-shrink: 0; flex-wrap: wrap; }
+  .viewer-toolbar.hidden { display: none; }
+  .t-btn { background: #334155; border: 2px solid transparent; color: #fff; width: 32px; height: 32px; border-radius: 7px; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; }
+  .t-btn.active { border-color: #e94560; background: #3d1a2e; }
+  .clr { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; flex-shrink: 0; }
+  .clr.active { border-color: #fff; transform: scale(1.2); }
+  .sep { width: 1px; height: 24px; background: #334155; margin: 0 2px; }
+  input[type="range"] { width: 70px; accent-color: #e94560; }
+  .sz-label { font-size: 11px; color: #64748b; min-width: 28px; }
+
+  .viewer-main { flex: 1; overflow: auto; display: flex; justify-content: center; align-items: flex-start; background: #0d0d1a; padding: 12px; }
+  .canvas-wrap { position: relative; display: inline-block; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+  #pdfCanvas { display: block; background: #fff; }
+  #drawCanvas { position: absolute; top: 0; left: 0; cursor: crosshair; }
+  .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #64748b; padding: 60px; font-size: 14px; text-align: center; }
+  .spinner { width: 36px; height: 36px; border: 3px solid #334155; border-top-color: #e94560; border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="home" id="homeScreen">
+  <div class="home-header">
+    <h1>🇰🇷 I Love Korean</h1>
+    <p>Darslikni tanlang</p>
+  </div>
+  <div id="bookList"></div>
+</div>
+
+<div class="viewer" id="viewerScreen">
+  <div class="viewer-topbar">
+    <button class="back-btn" id="backBtn">←</button>
+    <span class="viewer-title" id="viewerTitle">—</span>
+    <button class="nav-btn" id="prevPage">◀</button>
+    <span class="page-num" id="pageNum">— / —</span>
+    <button class="nav-btn" id="nextPage">▶</button>
+    <button class="save-btn" id="saveBtn">💾</button>
+    <button class="toggle-btn" id="toggleToolbar">🎨</button>
+  </div>
+
+  <div class="viewer-toolbar" id="toolbar">
+    <button class="t-btn active" id="toolPen">✏️</button>
+    <button class="t-btn" id="toolHL">🖊</button>
+    <button class="t-btn" id="toolErase">🧹</button>
+    <div class="sep"></div>
+    <div class="clr active" style="background:#e94560" data-c="#e94560"></div>
+    <div class="clr" style="background:#3b82f6" data-c="#3b82f6"></div>
+    <div class="clr" style="background:#10b981" data-c="#10b981"></div>
+    <div class="clr" style="background:#f59e0b" data-c="#f59e0b"></div>
+    <div class="clr" style="background:#000" data-c="#000000"></div>
+    <div class="clr" style="background:#fff;border:1px solid #555" data-c="#ffffff"></div>
+    <div class="sep"></div>
+    <input type="range" id="brushSize" min="1" max="30" value="3">
+    <span class="sz-label" id="szLabel">3px</span>
+    <div class="sep"></div>
+    <button class="t-btn" id="undoBtn">↩</button>
+    <button class="t-btn" id="clearBtn" style="color:#e94560">🗑</button>
+  </div>
+
+  <div class="viewer-main">
+    <div class="loading" id="loadingState">
+      <div class="spinner"></div>
+      <span>Yuklanmoqda...</span>
+    </div>
+    <div class="canvas-wrap" id="canvasWrap" style="display:none">
+      <canvas id="pdfCanvas"></canvas>
+      <canvas id="drawCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+const BASE_URL = "https://raw.githubusercontent.com/hackerblogger4-sketch/Ilovekorean/main/";
+
+const levels = [
+  { num: 1, color: "#e94560", emoji: "1️⃣" },
+  { num: 2, color: "#f59e0b", emoji: "2️⃣" },
+  { num: 3, color: "#10b981", emoji: "3️⃣" },
+  { num: 4, color: "#3b82f6", emoji: "4️⃣" },
+  { num: 5, color: "#8b5cf6", emoji: "5️⃣" },
+  { num: 6, color: "#ec4899", emoji: "6️⃣" },
+];
+
+const bookList = document.getElementById('bookList');
+levels.forEach(lv => {
+  const card = document.createElement('div');
+  card.className = 'level-card';
+  card.innerHTML = `
+    <div class="level-title" style="color:${lv.color}">${lv.emoji} ${lv.num}-daraja</div>
+    <div class="book-row">
+      <button class="book-btn" onclick="openPDF('I love korean sb${lv.num}.pdf','SB ${lv.num} — Student Book')">
+        <div class="book-icon sb-icon">📘</div>
+        <div class="book-info">
+          <div class="book-type sb-type">Student Book</div>
+          <div class="book-name">SB ${lv.num}</div>
+        </div>
+      </button>
+      <button class="book-btn" onclick="openPDF('I love korean wb${lv.num}.pdf','WB ${lv.num} — Workbook')">
+        <div class="book-icon wb-icon">📗</div>
+        <div class="book-info">
+          <div class="book-type wb-type">Workbook</div>
+          <div class="book-name">WB ${lv.num}</div>
+        </div>
+      </button>
+    </div>`;
+  bookList.appendChild(card);
+});
+
+let pdfDoc=null, curPage=1, scale=1.5, tool='pen', color='#e94560', brush=3, drawing=false, lx=0, ly=0, history=[];
+const pdfCanvas=document.getElementById('pdfCanvas');
+const drawCanvas=document.getElementById('drawCanvas');
+const pdfCtx=pdfCanvas.getContext('2d');
+const drawCtx=drawCanvas.getContext('2d');
+
+async function openPDF(filename, title) {
+  document.getElementById('homeScreen').style.display='none';
+  document.getElementById('viewerScreen').classList.add('active');
+  document.getElementById('viewerTitle').textContent=title;
+  document.getElementById('loadingState').style.display='flex';
+  document.getElementById('loadingState').innerHTML='<div class="spinner"></div><span>Yuklanmoqda...</span>';
+  document.getElementById('canvasWrap').style.display='none';
+  history=[]; curPage=1;
+  try {
+    pdfDoc = await pdfjsLib.getDocument(BASE_URL + encodeURIComponent(filename)).promise;
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('canvasWrap').style.display='inline-block';
+    renderPage();
+  } catch(e) {
+    document.getElementById('loadingState').innerHTML='<span style="color:#e94560">❌ Fayl topilmadi.<br>GitHub\'ga PDF fayllarni yuklang!</span>';
+  }
+}
+
+async function renderPage() {
+  const page = await pdfDoc.getPage(curPage);
+  const vp = page.getViewport({scale});
+  pdfCanvas.width=drawCanvas.width=vp.width;
+  pdfCanvas.height=drawCanvas.height=vp.height;
+  await page.render({canvasContext:pdfCtx, viewport:vp}).promise;
+  document.getElementById('pageNum').textContent=`${curPage} / ${pdfDoc.numPages}`;
+}
+
+function getPos(e) {
+  const r=drawCanvas.getBoundingClientRect();
+  return { x:(e.clientX-r.left)*drawCanvas.width/r.width, y:(e.clientY-r.top)*drawCanvas.height/r.height };
+}
+function startDraw(p) {
+  drawing=true;
+  history.push(drawCtx.getImageData(0,0,drawCanvas.width,drawCanvas.height));
+  if(history.length>40) history.shift();
+  lx=p.x; ly=p.y;
+  drawCtx.beginPath(); drawCtx.moveTo(lx,ly);
+}
+function doDraw(p) {
+  if(!drawing) return;
+  drawCtx.lineJoin=drawCtx.lineCap='round';
+  if(tool==='erase') { drawCtx.globalCompositeOperation='destination-out'; drawCtx.lineWidth=brush*5; drawCtx.strokeStyle='rgba(0,0,0,1)'; drawCtx.globalAlpha=1; }
+  else if(tool==='hl') { drawCtx.globalCompositeOperation='source-over'; drawCtx.lineWidth=brush*8; drawCtx.strokeStyle=color; drawCtx.globalAlpha=0.3; }
+  else { drawCtx.globalCompositeOperation='source-over'; drawCtx.lineWidth=brush; drawCtx.strokeStyle=color; drawCtx.globalAlpha=1; }
+  drawCtx.lineTo(p.x,p.y); drawCtx.stroke();
+  drawCtx.beginPath(); drawCtx.moveTo(p.x,p.y);
+  lx=p.x; ly=p.y;
+}
+function endDraw() { drawing=false; drawCtx.globalAlpha=1; drawCtx.globalCompositeOperation='source-over'; }
+
+drawCanvas.addEventListener('mousedown',e=>startDraw(getPos(e)));
+drawCanvas.addEventListener('mousemove',e=>doDraw(getPos(e)));
+drawCanvas.addEventListener('mouseup',endDraw);
+drawCanvas.addEventListener('mouseleave',endDraw);
+drawCanvas.addEventListener('touchstart',e=>{e.preventDefault();startDraw(getPos(e.touches[0]));},{passive:false});
+drawCanvas.addEventListener('touchmove',e=>{e.preventDefault();doDraw(getPos(e.touches[0]));},{passive:false});
+drawCanvas.addEventListener('touchend',endDraw);
+
+function setTool(t,id) { tool=t; ['toolPen','toolHL','toolErase'].forEach(x=>document.getElementById(x).classList.remove('active')); document.getElementById(id).classList.add('active'); }
+document.getElementById('toolPen').onclick=()=>setTool('pen','toolPen');
+document.getElementById('toolHL').onclick=()=>setTool('hl','toolHL');
+document.getElementById('toolErase').onclick=()=>setTool('erase','toolErase');
+
+document.querySelectorAll('.clr').forEach(b=>{ b.onclick=()=>{ document.querySelectorAll('.clr').forEach(x=>x.classList.remove('active')); b.classList.add('active'); color=b.dataset.c; }; });
+document.getElementById('brushSize').oninput=e=>{ brush=e.target.value; document.getElementById('szLabel').textContent=brush+'px'; };
+document.getElementById('undoBtn').onclick=()=>{ if(history.length>0) drawCtx.putImageData(history.pop(),0,0); };
+document.getElementById('clearBtn').onclick=()=>{ if(confirm('Barcha chizmalar ochirilsinmi?')){ history.push(drawCtx.getImageData(0,0,drawCanvas.width,drawCanvas.height)); drawCtx.clearRect(0,0,drawCanvas.width,drawCanvas.height); } };
+document.getElementById('prevPage').onclick=()=>{ if(pdfDoc&&curPage>1){curPage--;renderPage();} };
+document.getElementById('nextPage').onclick=()=>{ if(pdfDoc&&curPage<pdfDoc.numPages){curPage++;renderPage();} };
+document.getElementById('saveBtn').onclick=()=>{ const m=document.createElement('canvas'); m.width=pdfCanvas.width; m.height=pdfCanvas.height; const c=m.getContext('2d'); c.drawImage(pdfCanvas,0,0); c.drawImage(drawCanvas,0,0); const a=document.createElement('a'); a.download='page-'+curPage+'.png'; a.href=m.toDataURL(); a.click(); };
+document.getElementById('toggleToolbar').onclick=()=>document.getElementById('toolbar').classList.toggle('hidden');
+document.getElementById('backBtn').onclick=()=>{ document.getElementById('viewerScreen').classList.remove('active'); document.getElementById('homeScreen').style.display='block'; pdfDoc=null; };
+</script>
+</body>
+</html>
