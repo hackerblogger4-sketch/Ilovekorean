@@ -1,4 +1,4 @@
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
@@ -9,7 +9,6 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-  /* HOME */
   .home { flex: 1; overflow-y: auto; }
   .header { text-align: center; padding: 24px 16px 12px; }
   .header .flag { font-size: 40px; margin-bottom: 8px; }
@@ -33,17 +32,17 @@
   .soon-badge { font-size: 9px; background: #1e3a5f; color: #64748b; padding: 2px 6px; border-radius: 4px; margin-top: 3px; display: inline-block; }
   .arrow { color: #475569; font-size: 16px; margin-left: auto; }
 
-  /* VIEWER */
   .viewer { display: none; flex-direction: column; height: 100vh; }
   .viewer.active { display: flex; }
-  .viewer-topbar { background: #1e293b; padding: 10px 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #334155; flex-shrink: 0; }
-  .back-btn { background: #334155; border: none; color: #fff; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 16px; flex-shrink: 0; }
-  .viewer-title { font-size: 13px; font-weight: 700; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .nav-btn { background: #334155; border: none; color: #fff; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-size: 13px; flex-shrink: 0; }
-  .nav-btn:hover { background: #475569; }
-  .page-num { font-size: 12px; color: #94a3b8; min-width: 48px; text-align: center; }
-  .save-btn { background: #10b981; border: none; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; flex-shrink: 0; }
-  .toggle-btn { background: #334155; border: none; color: #fff; padding: 5px 9px; border-radius: 6px; cursor: pointer; font-size: 13px; flex-shrink: 0; }
+  .viewer-topbar { background: #1e293b; padding: 8px 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #334155; flex-shrink: 0; }
+  .back-btn { background: #334155; border: none; color: #fff; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 15px; flex-shrink: 0; }
+  .viewer-title { font-size: 12px; font-weight: 700; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-btn { background: #334155; border: none; color: #fff; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 12px; flex-shrink: 0; }
+  .zoom-btn { background: #334155; border: none; color: #fff; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 14px; flex-shrink: 0; }
+  .zoom-info { font-size: 11px; color: #94a3b8; min-width: 36px; text-align: center; }
+  .page-num { font-size: 11px; color: #94a3b8; min-width: 44px; text-align: center; }
+  .save-btn { background: #10b981; border: none; color: #fff; padding: 5px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+  .toggle-btn { background: #334155; border: none; color: #fff; padding: 5px 8px; border-radius: 6px; cursor: pointer; font-size: 13px; flex-shrink: 0; }
 
   .viewer-toolbar { background: #1e293b; padding: 8px 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #334155; flex-shrink: 0; flex-wrap: wrap; }
   .viewer-toolbar.hidden { display: none; }
@@ -52,13 +51,13 @@
   .clr { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; flex-shrink: 0; }
   .clr.active { border-color: #fff; transform: scale(1.2); }
   .sep { width: 1px; height: 24px; background: #334155; margin: 0 2px; flex-shrink: 0; }
-  input[type="range"] { width: 70px; accent-color: #e94560; }
+  input[type="range"] { width: 65px; accent-color: #e94560; }
   .sz-label { font-size: 11px; color: #64748b; min-width: 28px; }
 
-  .viewer-main { flex: 1; overflow: auto; display: flex; justify-content: center; align-items: flex-start; background: #0d0d1a; padding: 12px; }
-  .canvas-wrap { position: relative; display: inline-block; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+  .viewer-main { flex: 1; overflow: auto; display: flex; justify-content: center; align-items: flex-start; background: #0d0d1a; padding: 12px; touch-action: pan-x pan-y; }
+  .canvas-wrap { position: relative; display: inline-block; box-shadow: 0 10px 40px rgba(0,0,0,0.5); transform-origin: top center; }
   #pdfCanvas { display: block; background: #fff; }
-  #drawCanvas { position: absolute; top: 0; left: 0; cursor: crosshair; }
+  #drawCanvas { position: absolute; top: 0; left: 0; }
   .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #64748b; padding: 60px; font-size: 14px; text-align: center; width: 100%; }
   .spinner { width: 36px; height: 36px; border: 3px solid #334155; border-top-color: #e94560; border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -66,7 +65,6 @@
 </head>
 <body>
 
-<!-- HOME -->
 <div class="home" id="homeScreen">
   <div class="header">
     <div class="flag">🇰🇷</div>
@@ -76,14 +74,16 @@
   <div class="content" id="bookList"></div>
 </div>
 
-<!-- VIEWER -->
 <div class="viewer" id="viewerScreen">
   <div class="viewer-topbar">
     <button class="back-btn" id="backBtn">←</button>
     <span class="viewer-title" id="viewerTitle">—</span>
     <button class="nav-btn" id="prevPage">◀</button>
-    <span class="page-num" id="pageNum">— / —</span>
+    <span class="page-num" id="pageNum">—/—</span>
     <button class="nav-btn" id="nextPage">▶</button>
+    <button class="zoom-btn" id="zoomOut">−</button>
+    <span class="zoom-info" id="zoomInfo">100%</span>
+    <button class="zoom-btn" id="zoomIn">+</button>
     <button class="save-btn" id="saveBtn">💾</button>
     <button class="toggle-btn" id="toggleToolbar">🎨</button>
   </div>
@@ -105,7 +105,7 @@
     <button class="t-btn" id="undoBtn">↩</button>
     <button class="t-btn" id="clearBtn" style="color:#e94560">🗑</button>
   </div>
-  <div class="viewer-main">
+  <div class="viewer-main" id="viewerMain">
     <div class="loading" id="loadingState">
       <div class="spinner"></div>
       <span>Yuklanmoqda...</span>
@@ -121,10 +121,9 @@
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 const BASE = "https://zrwbebbkmhwpwjeggbee.supabase.co/storage/v1/object/public/PDFs/";
-
 const books = [
-  { level: 1, color: "#e94560", emoji: "1️⃣", sb: BASE + "I%20love%20korean%20sb1.pdf", wb: BASE + "I%20love%20korean%20wb1.pdf" },
-  { level: 2, color: "#f59e0b", emoji: "2️⃣", sb: BASE + "I%20love%20korean%20sb2.pdf", wb: BASE + "I%20love%20korean%20wb2.pdf" },
+  { level: 1, color: "#e94560", emoji: "1️⃣", sb: BASE+"I%20love%20korean%20sb1.pdf", wb: BASE+"I%20love%20korean%20wb1.pdf" },
+  { level: 2, color: "#f59e0b", emoji: "2️⃣", sb: BASE+"I%20love%20korean%20sb2.pdf", wb: BASE+"I%20love%20korean%20wb2.pdf" },
   { level: 3, color: "#10b981", emoji: "3️⃣", sb: null, wb: null },
   { level: 4, color: "#3b82f6", emoji: "4️⃣", sb: null, wb: null },
   { level: 5, color: "#8b5cf6", emoji: "5️⃣", sb: null, wb: null },
@@ -135,40 +134,23 @@ const list = document.getElementById('bookList');
 books.forEach(b => {
   const card = document.createElement('div');
   card.className = 'level-card';
-  function btnHtml(url, type, num) {
-    const isSB = type === 'sb';
-    const icon = isSB ? '📘' : '📗';
-    const iconClass = isSB ? 'sb-icon' : 'wb-icon';
-    const typeClass = isSB ? 'sb-type' : 'wb-type';
-    const label = isSB ? 'Student Book' : 'Workbook';
-    const name = `${type.toUpperCase()} ${num}`;
-    if (url) {
-      return `<button class="book-btn" onclick="openPDF('${url}','${name} — ${label}')">
-        <div class="book-icon ${iconClass}">${icon}</div>
-        <div class="book-info">
-          <div class="book-type ${typeClass}">${label}</div>
-          <div class="book-name">${name}</div>
-        </div>
-        <span class="arrow">›</span>
-      </button>`;
-    } else {
-      return `<div class="book-btn disabled">
-        <div class="book-icon ${iconClass}">${icon}</div>
-        <div class="book-info">
-          <div class="book-type ${typeClass}">${label}</div>
-          <div class="book-name">${name}</div>
-          <span class="soon-badge">Tez kunda</span>
-        </div>
-      </div>`;
-    }
+  function btn(url, type, num) {
+    const isSB = type==='sb';
+    const icon = isSB?'📘':'📗';
+    const ic = isSB?'sb-icon':'wb-icon';
+    const tc = isSB?'sb-type':'wb-type';
+    const lbl = isSB?'Student Book':'Workbook';
+    const nm = `${type.toUpperCase()} ${num}`;
+    return url
+      ? `<button class="book-btn" onclick="openPDF('${url}','${nm} — ${lbl}')"><div class="book-icon ${ic}">${icon}</div><div class="book-info"><div class="book-type ${tc}">${lbl}</div><div class="book-name">${nm}</div></div><span class="arrow">›</span></button>`
+      : `<div class="book-btn disabled"><div class="book-icon ${ic}">${icon}</div><div class="book-info"><div class="book-type ${tc}">${lbl}</div><div class="book-name">${nm}</div><span class="soon-badge">Tez kunda</span></div></div>`;
   }
-  card.innerHTML = `
-    <div class="level-title" style="color:${b.color}">${b.emoji} ${b.level}-daraja</div>
-    <div class="book-row">${btnHtml(b.sb,'sb',b.level)}${btnHtml(b.wb,'wb',b.level)}</div>`;
+  card.innerHTML = `<div class="level-title" style="color:${b.color}">${b.emoji} ${b.level}-daraja</div><div class="book-row">${btn(b.sb,'sb',b.level)}${btn(b.wb,'wb',b.level)}</div>`;
   list.appendChild(card);
 });
 
-let pdfDoc=null, curPage=1, scale=1.5, tool='pen', color='#e94560', brush=3, drawing=false, lx=0, ly=0, history=[];
+let pdfDoc=null, curPage=1, scale=1.5, baseScale=1.5;
+let tool='pen', color='#e94560', brush=3, drawing=false, lx=0, ly=0, history=[];
 const pdfCanvas=document.getElementById('pdfCanvas');
 const drawCanvas=document.getElementById('drawCanvas');
 const pdfCtx=pdfCanvas.getContext('2d');
@@ -181,14 +163,15 @@ async function openPDF(url, title) {
   document.getElementById('loadingState').style.display='flex';
   document.getElementById('loadingState').innerHTML='<div class="spinner"></div><span>Yuklanmoqda...</span>';
   document.getElementById('canvasWrap').style.display='none';
-  history=[]; curPage=1;
+  history=[]; curPage=1; scale=1.5; baseScale=1.5;
+  document.getElementById('zoomInfo').textContent='100%';
   try {
     pdfDoc = await pdfjsLib.getDocument(url).promise;
     document.getElementById('loadingState').style.display='none';
     document.getElementById('canvasWrap').style.display='inline-block';
     renderPage();
   } catch(e) {
-    document.getElementById('loadingState').innerHTML='<span style="color:#e94560">❌ Fayl yuklanmadi.<br>Internet aloqasini tekshiring!</span>';
+    document.getElementById('loadingState').innerHTML='<span style="color:#e94560">❌ Fayl yuklanmadi!</span>';
   }
 }
 
@@ -197,9 +180,41 @@ async function renderPage() {
   const vp = page.getViewport({scale});
   pdfCanvas.width=drawCanvas.width=vp.width;
   pdfCanvas.height=drawCanvas.height=vp.height;
+  drawCtx.clearRect(0,0,drawCanvas.width,drawCanvas.height);
+  history=[];
   await page.render({canvasContext:pdfCtx, viewport:vp}).promise;
-  document.getElementById('pageNum').textContent=`${curPage} / ${pdfDoc.numPages}`;
+  document.getElementById('pageNum').textContent=`${curPage}/${pdfDoc.numPages}`;
 }
+
+// ZOOM buttons
+document.getElementById('zoomIn').onclick = () => {
+  scale = Math.min(scale + 0.5, 5);
+  document.getElementById('zoomInfo').textContent = Math.round(scale/baseScale*100)+'%';
+  if(pdfDoc) renderPage();
+};
+document.getElementById('zoomOut').onclick = () => {
+  scale = Math.max(scale - 0.5, 0.5);
+  document.getElementById('zoomInfo').textContent = Math.round(scale/baseScale*100)+'%';
+  if(pdfDoc) renderPage();
+};
+
+// PINCH TO ZOOM
+let lastDist = 0;
+const viewerMain = document.getElementById('viewerMain');
+viewerMain.addEventListener('touchstart', e => {
+  if(e.touches.length === 2) lastDist = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+});
+viewerMain.addEventListener('touchmove', e => {
+  if(e.touches.length === 2) {
+    e.preventDefault();
+    const dist = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+    const delta = dist - lastDist;
+    lastDist = dist;
+    scale = Math.min(Math.max(scale + delta * 0.01, 0.5), 5);
+    document.getElementById('zoomInfo').textContent = Math.round(scale/baseScale*100)+'%';
+    if(pdfDoc) renderPage();
+  }
+}, {passive: false});
 
 function getPos(e) {
   const r=drawCanvas.getBoundingClientRect();
@@ -225,8 +240,8 @@ drawCanvas.addEventListener('mousedown',e=>startDraw(getPos(e)));
 drawCanvas.addEventListener('mousemove',e=>doDraw(getPos(e)));
 drawCanvas.addEventListener('mouseup',endDraw);
 drawCanvas.addEventListener('mouseleave',endDraw);
-drawCanvas.addEventListener('touchstart',e=>{e.preventDefault();startDraw(getPos(e.touches[0]));},{passive:false});
-drawCanvas.addEventListener('touchmove',e=>{e.preventDefault();doDraw(getPos(e.touches[0]));},{passive:false});
+drawCanvas.addEventListener('touchstart',e=>{if(e.touches.length===1){e.preventDefault();startDraw(getPos(e.touches[0]));}},{passive:false});
+drawCanvas.addEventListener('touchmove',e=>{if(e.touches.length===1){e.preventDefault();doDraw(getPos(e.touches[0]));}},{passive:false});
 drawCanvas.addEventListener('touchend',endDraw);
 
 function setTool(t,id){tool=t;['toolPen','toolHL','toolErase'].forEach(x=>document.getElementById(x).classList.remove('active'));document.getElementById(id).classList.add('active');}
