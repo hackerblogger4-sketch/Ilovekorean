@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
@@ -8,43 +8,50 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-  .home { flex: 1; overflow-y: auto; padding: 16px; }
-  .home-header { text-align: center; padding: 20px 0 16px; }
-  .home-header h1 { font-size: 22px; font-weight: 800; color: #fff; }
-  .home-header p { font-size: 13px; color: #64748b; margin-top: 4px; }
-  .level-card { background: #1e293b; border-radius: 14px; margin-bottom: 14px; overflow: hidden; border: 1px solid #334155; }
-  .level-title { padding: 12px 16px; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
-  .book-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #334155; }
-  .book-btn { background: #1e293b; border: none; padding: 14px; cursor: pointer; text-align: left; transition: background 0.15s; display: flex; align-items: center; gap: 10px; width: 100%; }
-  .book-btn:hover, .book-btn:active { background: #2d3f55; }
-  .book-btn.disabled { opacity: 0.4; cursor: not-allowed; }
-  .book-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .sb-icon { background: #1d4ed8; }
-  .wb-icon { background: #7c3aed; }
-  .book-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+
+  /* HOME */
+  .home { flex: 1; overflow-y: auto; }
+  .header { text-align: center; padding: 24px 16px 12px; }
+  .header .flag { font-size: 40px; margin-bottom: 8px; }
+  .header h1 { font-size: 22px; font-weight: 800; color: #fff; }
+  .header p { font-size: 13px; color: #64748b; margin-top: 4px; }
+  .content { padding: 0 16px 30px; }
+  .level-card { background: #1e293b; border-radius: 16px; margin-bottom: 14px; overflow: hidden; border: 1px solid #334155; }
+  .level-title { padding: 12px 16px; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #334155; }
+  .book-row { display: grid; grid-template-columns: 1fr 1fr; }
+  .book-btn { background: #1e293b; border: none; padding: 15px 14px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 10px; width: 100%; transition: background 0.15s; }
+  .book-btn:first-child { border-right: 1px solid #334155; }
+  .book-btn:hover, .book-btn:active { background: #263548; }
+  .book-btn.disabled { opacity: 0.4; pointer-events: none; }
+  .book-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
+  .sb-icon { background: linear-gradient(135deg, #1d4ed8, #3b82f6); }
+  .wb-icon { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+  .book-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
   .sb-type { color: #60a5fa; }
   .wb-type { color: #a78bfa; }
-  .book-name { font-size: 12px; color: #94a3b8; }
-  .soon-badge { font-size: 9px; background: #334155; color: #64748b; padding: 2px 6px; border-radius: 4px; margin-top: 2px; display: inline-block; }
+  .book-name { font-size: 12px; color: #cbd5e1; font-weight: 600; }
+  .soon-badge { font-size: 9px; background: #1e3a5f; color: #64748b; padding: 2px 6px; border-radius: 4px; margin-top: 3px; display: inline-block; }
+  .arrow { color: #475569; font-size: 16px; margin-left: auto; }
 
+  /* VIEWER */
   .viewer { display: none; flex-direction: column; height: 100vh; }
   .viewer.active { display: flex; }
   .viewer-topbar { background: #1e293b; padding: 10px 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #334155; flex-shrink: 0; }
-  .back-btn { background: #334155; border: none; color: #fff; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+  .back-btn { background: #334155; border: none; color: #fff; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 16px; flex-shrink: 0; }
   .viewer-title { font-size: 13px; font-weight: 700; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .nav-btn { background: #334155; border: none; color: #fff; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+  .nav-btn { background: #334155; border: none; color: #fff; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-size: 13px; flex-shrink: 0; }
   .nav-btn:hover { background: #475569; }
-  .page-num { font-size: 12px; color: #94a3b8; min-width: 50px; text-align: center; }
-  .save-btn { background: #10b981; border: none; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
-  .toggle-btn { background: #334155; border: none; color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+  .page-num { font-size: 12px; color: #94a3b8; min-width: 48px; text-align: center; }
+  .save-btn { background: #10b981; border: none; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+  .toggle-btn { background: #334155; border: none; color: #fff; padding: 5px 9px; border-radius: 6px; cursor: pointer; font-size: 13px; flex-shrink: 0; }
 
   .viewer-toolbar { background: #1e293b; padding: 8px 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #334155; flex-shrink: 0; flex-wrap: wrap; }
   .viewer-toolbar.hidden { display: none; }
-  .t-btn { background: #334155; border: 2px solid transparent; color: #fff; width: 32px; height: 32px; border-radius: 7px; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; }
+  .t-btn { background: #334155; border: 2px solid transparent; color: #fff; width: 32px; height: 32px; border-radius: 7px; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .t-btn.active { border-color: #e94560; background: #3d1a2e; }
   .clr { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; flex-shrink: 0; }
   .clr.active { border-color: #fff; transform: scale(1.2); }
-  .sep { width: 1px; height: 24px; background: #334155; margin: 0 2px; }
+  .sep { width: 1px; height: 24px; background: #334155; margin: 0 2px; flex-shrink: 0; }
   input[type="range"] { width: 70px; accent-color: #e94560; }
   .sz-label { font-size: 11px; color: #64748b; min-width: 28px; }
 
@@ -59,14 +66,17 @@
 </head>
 <body>
 
+<!-- HOME -->
 <div class="home" id="homeScreen">
-  <div class="home-header">
-    <h1>🇰🇷 I Love Korean</h1>
+  <div class="header">
+    <div class="flag">🇰🇷</div>
+    <h1>I Love Korean</h1>
     <p>Darslikni tanlang</p>
   </div>
-  <div id="bookList"></div>
+  <div class="content" id="bookList"></div>
 </div>
 
+<!-- VIEWER -->
 <div class="viewer" id="viewerScreen">
   <div class="viewer-topbar">
     <button class="back-btn" id="backBtn">←</button>
@@ -110,62 +120,52 @@
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-// Google Drive havolalarini shu yerga qo'shing
-// Format: https://drive.google.com/file/d/FILE_ID/view
-// PDF.js uchun to'g'ridan-to'g'ri yuklab olish havolasiga o'tkazamiz
-function driveUrl(id) {
-  return `https://drive.google.com/uc?export=download&id=${id}`;
-}
-
-function extractId(url) {
-  const m = url.match(/\/d\/([^/]+)/);
-  return m ? m[1] : null;
-}
+const BASE = "https://zrwbebbkmhwpwjeggbee.supabase.co/storage/v1/object/public/PDFs/";
 
 const books = [
-  {
-    level: 1, color: "#e94560", emoji: "1️⃣",
-    sb: extractId("https://drive.google.com/file/d/19q4lFLIOSFnSKTleQwTxs7R_bBLbceTU/view"),
-    wb: extractId("https://drive.google.com/file/d/1YAWx1DaDfzd_FZR7ENwhuVFObsVis3Ol/view"),
-  },
-  {
-    level: 2, color: "#f59e0b", emoji: "2️⃣",
-    sb: extractId("https://drive.google.com/file/d/1oJvCJ3nB96im4W7ep7auJZHQnmVANGuU/view"),
-    wb: extractId("https://drive.google.com/file/d/1_vsJnCtXKGe_2YOnhQKe-NKWIohiv-LX/view"),
-  },
+  { level: 1, color: "#e94560", emoji: "1️⃣", sb: BASE + "I%20love%20korean%20sb1.pdf", wb: BASE + "I%20love%20korean%20wb1.pdf" },
+  { level: 2, color: "#f59e0b", emoji: "2️⃣", sb: BASE + "I%20love%20korean%20sb2.pdf", wb: BASE + "I%20love%20korean%20wb2.pdf" },
   { level: 3, color: "#10b981", emoji: "3️⃣", sb: null, wb: null },
   { level: 4, color: "#3b82f6", emoji: "4️⃣", sb: null, wb: null },
   { level: 5, color: "#8b5cf6", emoji: "5️⃣", sb: null, wb: null },
   { level: 6, color: "#ec4899", emoji: "6️⃣", sb: null, wb: null },
 ];
 
-const bookList = document.getElementById('bookList');
+const list = document.getElementById('bookList');
 books.forEach(b => {
   const card = document.createElement('div');
   card.className = 'level-card';
-  const sbDisabled = !b.sb;
-  const wbDisabled = !b.wb;
+  function btnHtml(url, type, num) {
+    const isSB = type === 'sb';
+    const icon = isSB ? '📘' : '📗';
+    const iconClass = isSB ? 'sb-icon' : 'wb-icon';
+    const typeClass = isSB ? 'sb-type' : 'wb-type';
+    const label = isSB ? 'Student Book' : 'Workbook';
+    const name = `${type.toUpperCase()} ${num}`;
+    if (url) {
+      return `<button class="book-btn" onclick="openPDF('${url}','${name} — ${label}')">
+        <div class="book-icon ${iconClass}">${icon}</div>
+        <div class="book-info">
+          <div class="book-type ${typeClass}">${label}</div>
+          <div class="book-name">${name}</div>
+        </div>
+        <span class="arrow">›</span>
+      </button>`;
+    } else {
+      return `<div class="book-btn disabled">
+        <div class="book-icon ${iconClass}">${icon}</div>
+        <div class="book-info">
+          <div class="book-type ${typeClass}">${label}</div>
+          <div class="book-name">${name}</div>
+          <span class="soon-badge">Tez kunda</span>
+        </div>
+      </div>`;
+    }
+  }
   card.innerHTML = `
     <div class="level-title" style="color:${b.color}">${b.emoji} ${b.level}-daraja</div>
-    <div class="book-row">
-      <button class="book-btn ${sbDisabled ? 'disabled' : ''}" ${sbDisabled ? 'disabled' : `onclick="openPDF('${b.sb}','SB ${b.level} — Student Book')"`}>
-        <div class="book-icon sb-icon">📘</div>
-        <div class="book-info">
-          <div class="book-type sb-type">Student Book</div>
-          <div class="book-name">SB ${b.level}</div>
-          ${sbDisabled ? '<span class="soon-badge">Tez kunda</span>' : ''}
-        </div>
-      </button>
-      <button class="book-btn ${wbDisabled ? 'disabled' : ''}" ${wbDisabled ? 'disabled' : `onclick="openPDF('${b.wb}','WB ${b.level} — Workbook')"`}>
-        <div class="book-icon wb-icon">📗</div>
-        <div class="book-info">
-          <div class="book-type wb-type">Workbook</div>
-          <div class="book-name">WB ${b.level}</div>
-          ${wbDisabled ? '<span class="soon-badge">Tez kunda</span>' : ''}
-        </div>
-      </button>
-    </div>`;
-  bookList.appendChild(card);
+    <div class="book-row">${btnHtml(b.sb,'sb',b.level)}${btnHtml(b.wb,'wb',b.level)}</div>`;
+  list.appendChild(card);
 });
 
 let pdfDoc=null, curPage=1, scale=1.5, tool='pen', color='#e94560', brush=3, drawing=false, lx=0, ly=0, history=[];
@@ -174,7 +174,7 @@ const drawCanvas=document.getElementById('drawCanvas');
 const pdfCtx=pdfCanvas.getContext('2d');
 const drawCtx=drawCanvas.getContext('2d');
 
-async function openPDF(fileId, title) {
+async function openPDF(url, title) {
   document.getElementById('homeScreen').style.display='none';
   document.getElementById('viewerScreen').classList.add('active');
   document.getElementById('viewerTitle').textContent=title;
@@ -183,13 +183,12 @@ async function openPDF(fileId, title) {
   document.getElementById('canvasWrap').style.display='none';
   history=[]; curPage=1;
   try {
-    const url = driveUrl(fileId);
-    pdfDoc = await pdfjsLib.getDocument({url, withCredentials:false}).promise;
+    pdfDoc = await pdfjsLib.getDocument(url).promise;
     document.getElementById('loadingState').style.display='none';
     document.getElementById('canvasWrap').style.display='inline-block';
     renderPage();
   } catch(e) {
-    document.getElementById('loadingState').innerHTML='<span style="color:#e94560">❌ Fayl yuklanmadi.<br>Google Drive ruxsatini tekshiring!</span>';
+    document.getElementById('loadingState').innerHTML='<span style="color:#e94560">❌ Fayl yuklanmadi.<br>Internet aloqasini tekshiring!</span>';
   }
 }
 
